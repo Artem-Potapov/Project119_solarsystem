@@ -1,13 +1,11 @@
 import turtle as trtl
 from potapov_collections import BetterTurtle
 
-turtle = BetterTurtle()
+
+sun = BetterTurtle(shape="circle")
+sun.color("yellow")
+sun.turtlesize(7)
+
+
 app = trtl.Screen()
-
-turtle.speed(0)
-
-for i in range(360):
-  turtle.circle(100, 1, 1)
-turtle.tiltangle()
-
 app.mainloop()
