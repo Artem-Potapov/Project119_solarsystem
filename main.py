@@ -1,14 +1,24 @@
 import turtle as trtl
-from potapov_collections import BetterTurtle
 import time
+import os
+import math
+
+from potapov_collections import BetterTurtle
+
+script_directory: str = os.path.dirname(os.path.abspath(__file__)).replace("\\", "/") #we'll need this to not mess up image import
 
 
 class Planet:
-  def __init__(self, _turtle: BetterTurtle, _orbit: int, _orbit_speed: int, _main_color: str, _dawn_color: str|None = None):
+  def __init__(self, _turtle: BetterTurtle, _orbit: int, _orbit_speed: int, _main_color_or_images: list[str]|str):
     self.turtle = _turtle
     self.orbit_radius = _orbit
-    self.main_color = _main_color
-    self.dawn_color = _dawn_color
+    if isinstance(_main_color_or_images, list):
+      self.images = _main_color_or_images
+      self.main_color = "orange"
+    else:
+      self.main_color = _main_color_or_images
+      self.turtle.color(self.main_color)
+      self.images = []
     self.orbit_speed = _orbit_speed
   
   def orbit(self, speed: int|None=None, steps: int=3):
@@ -17,30 +27,38 @@ class Planet:
     else:
       spd = self.orbit_speed
     self.turtle.circle(self.orbit_radius, extent=spd, steps=steps)
-    time.sleep(0.01)
+    
+
+#init screen
+app = trtl.Screen()
+app.bgcolor("#110133")
+for i in range(1, 5):
+  app.addshape(f"{script_directory}/earth{i}.gif")
+
 
 #init sun
 sun = BetterTurtle(shape="circle")
 sun.color("yellow")
 sun.turtlesize(7)
 
-colors = ["brown", "#EE00EE", "green", "orange"]
-sizes = [2, 3, 4, 3]
-orbit_speeds = [3, 5, 7, 10]
+colors_or_images = ["brown", "#EE00EE", ["earth1"], "orange"]
+sizes = [1.4, 2.5, 2.6, 2]
+orbit_speeds = [3, 5, 6, 10]
 
 planets = []
-for col, size, pos, spd in zip(colors, sizes, range(1, 5), orbit_speeds):
-  planet_turtle = BetterTurtle(start_pos=(pos*100+40, 0), shape="circle")
+for col, size, i, spd in zip(colors_or_images, sizes, range(1, 5), orbit_speeds):
+  planet_turtle = BetterTurtle(start_pos=(i*100+40, 0), shape="circle")
   planet_turtle.speed(0)
-  planet_turtle.color(col)
   planet_turtle.turtlesize(size)
   planet_turtle.setheading(90)
-  planet = Planet(planet_turtle, pos*100+40, spd, col)
+  planet = Planet(planet_turtle, i*100+40, spd, col)
   planets.append(planet)
+
 
 while True:
   for planet in planets:
     planet.orbit()
+    
 
-app = trtl.Screen()
+
 app.mainloop()
