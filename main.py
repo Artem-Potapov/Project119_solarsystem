@@ -57,9 +57,10 @@ class PlanetWithImage(Planet):
 #init screen
 app = trtl.Screen()
 app.bgcolor("#110133")
-for poser in range(1, 5):
-  app.addshape(f"{script_directory}/earth{poser}.gif")
-  app.addshape(f"{script_directory}/mars{poser}.gif")
+planets_to_add = ["earth", "mars"]
+for pl in planets_to_add:
+  for poser in range(1, 5):
+    app.addshape(f"{script_directory}/{pl}{poser}.gif")
 
 
 #init sun
